@@ -113,19 +113,19 @@ class PdoGsb{
 	 * @param $mois sous la forme aaaamm
 	 * @return tous les champs des lignes de frais hors forfait sous la forme d'un tableau associatif 
 	 */
-	public function getLesFraisHorsForfait($idVisiteur, $mois)
-	{
-		$req = "select * from lignefraishorsforfait where lignefraishorsforfait.idvisiteur ='$idVisiteur' 
-		and lignefraishorsforfait.mois = '$mois' ";
-		$res = PdoGsb::$monPdo->query($req);
-		$lesLignes = $res->fetchAll();
-		$nbLignes = count($lesLignes);
-		for ($i = 0; $i < $nbLignes; $i++) {
-			$date = $lesLignes[$i]['date'];
-			$lesLignes[$i]['date'] =  dateAnglaisVersFrancais($date);
-		}
-		return $lesLignes;
-	}
+	public function getLesFraisHorsForfait($idUtilisateur, $mois)
+    {
+        $req = "select * from lignefraishorsforfait where lignefraishorsforfait.idUtilisateur ='$idUtilisateur' 
+        and lignefraishorsforfait.mois = '$mois' ";
+        $res = PdoGsb::$monPdo->query($req);
+        $lesLignes = $res->fetchAll();
+        $nbLignes = count($lesLignes);
+        for ($i = 0; $i < $nbLignes; $i++) {
+            $date = $lesLignes[$i]['date'];
+            $lesLignes[$i]['date'] =  dateAnglaisVersFrancais($date);
+        }
+        return $lesLignes;
+    }
 	/**
 	 * Retourne le nombre de justificatif d'un visiteur pour un mois donné
  
