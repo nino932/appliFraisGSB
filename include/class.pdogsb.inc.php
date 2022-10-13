@@ -62,42 +62,77 @@ class PdoGsb{
 	}
 
 	public function getVisiteurs(){
-		$req = "select utilisateur.nom as nom, utilisateur.prenom as prenom from utilisateur where utilisateur.role='v'";
+		$req = "select utilisateur.id as id, utilisateur.nom as nom, utilisateur.prenom as prenom from utilisateur where utilisateur.role='v'";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesVisiteurs = $res->fetchAll();
 		return $lesVisiteurs;
 	}
 
-/**
- * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait
- * concernées par les deux arguments
+	function getInfosVisiteur()
+	{
+		$req = "select id, nom, prenom from utilisateur where role='V'";
+		$res = PdoGsb::$monPdo->query($req);
+		$lesVisiteurs = $res->fetchAll();
+		return $lesVisiteurs;
+	}
+
+	public function getAllMoisIsset()
+	{
+		$req = "SELECT ff.mois FROM fichefrais as ff GROUP BY ff.mois ORDER BY ff.mois DESC";
+		$rs = PdoGsb::$monPdo->query($req);
+		$ligne = $rs->fetchAll();
+		return $ligne;
+	}
+
+	public function getEtatFicheUtilisateur($idUtilisateur, $mois)
+	{
+		$req = "SELECT ff.idEtat as idEtat, e.libelle as libelle, ff.dateModif as datefiche, ff.montantValide as montant FROM fichefrais as ff, etat as e WHERE ff.idUtilisateur = '$idUtilisateur' AND ff.mois = '$mois' AND ff.idEtat = e.id";
+		$rs = PdoGsb::$monPdo->query($req);
+		$ligne = $rs->fetch();
+		return $ligne;
+	}
+
+	public function getInfosUtilisateurByID($idUtilisateur)
+	{
+		$req = "select * from utilisateur 
+		where utilisateur.id='$idUtilisateur'";
+		$rs = PdoGsb::$monPdo->query($req);
+		$ligne = $rs->fetch();
+		return $ligne;
+	}
+
+	
+	/**
+	 * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait
+	 * concernées par les deux arguments
  
- * La boucle foreach ne peut être utilisée ici car on procède
- * à une modification de la structure itérée - transformation du champ date-
+	 * La boucle foreach ne peut être utilisée ici car on procède
+	 * à une modification de la structure itérée - transformation du champ date-
  
- * @param $idUtilisateur
- * @param $mois sous la forme aaaamm
- * @return tous les champs des lignes de frais hors forfait sous la forme d'un tableau associatif 
-*/
-	public function getLesFraisHorsForfait($idUtilisateur,$mois){
-	    $req = "select * from lignefraishorsforfait where lignefraishorsforfait.idutilisateur ='$idUtilisateur' 
-		and lignefraishorsforfait.mois = '$mois' ";	
+	 * @param $idVisiteur 
+	 * @param $mois sous la forme aaaamm
+	 * @return tous les champs des lignes de frais hors forfait sous la forme d'un tableau associatif 
+	 */
+	public function getLesFraisHorsForfait($idVisiteur, $mois)
+	{
+		$req = "select * from lignefraishorsforfait where lignefraishorsforfait.idvisiteur ='$idVisiteur' 
+		and lignefraishorsforfait.mois = '$mois' ";
 		$res = PdoGsb::$monPdo->query($req);
 		$lesLignes = $res->fetchAll();
 		$nbLignes = count($lesLignes);
-		for ($i=0; $i<$nbLignes; $i++){
+		for ($i = 0; $i < $nbLignes; $i++) {
 			$date = $lesLignes[$i]['date'];
 			$lesLignes[$i]['date'] =  dateAnglaisVersFrancais($date);
 		}
-		return $lesLignes; 
+		return $lesLignes;
 	}
-/**
- * Retourne le nombre de justificatif d'un utilisateur pour un mois donné
+	/**
+	 * Retourne le nombre de justificatif d'un visiteur pour un mois donné
  
- * @param $idutilisateur 
- * @param $mois sous la forme aaaamm
- * @return le nombre entier de justificatifs 
-*/
+	 * @param $idVisiteur 
+	 * @param $mois sous la forme aaaamm
+	 * @return le nombre entier de justificatifs 
+	 */
 	public function getNbjustificatifs($idUtilisateur, $mois){
 		$req = "select fichefrais.nbjustificatifs as nb from  fichefrais where fichefrais.idutilisateur ='$idUtilisateur' and fichefrais.mois = '$mois'";
 		$res = PdoGsb::$monPdo->query($req);

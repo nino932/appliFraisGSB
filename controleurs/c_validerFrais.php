@@ -9,7 +9,6 @@ $action = $_REQUEST['action'];
 
 $lesVisiteurs = $pdo->getVisiteurs();
 $lesMois = $pdo->getLesMoisDisponibles('a55');
-include("vues/v_validerFrais.php");
 switch ($action) {
     case 'voirValiderFrais': {
             $pdo->getVisiteurs();
@@ -19,26 +18,27 @@ switch ($action) {
             // les mois étant triés décroissants
             $lesCles = array_keys($lesMois);
             $moisASelectionner = $lesCles[0];
-
+            include("vues/v_validerFrais.php");
             break;
         }
     case 'afficherFrais': {
-            $leMois = $_REQUEST['lstMois'];
-            $lesMois = $pdo->getLesMoisDisponibles($idVisiteur);
-            $moisASelectionner = $leMois;
+            $visiteurs = $pdo->getVisiteurs();
+            $mois = $pdo->getAllMoisIsset();
+            $mois_visiteur = $_POST["lstMois"];
 
-            $lesFraisHorsForfait = $pdo->getLesFraisHorsForfait($idVisiteur, $leMois);
-            $lesFraisForfait = $pdo->getLesFraisForfait($idVisiteur, $leMois);
-            $lesInfosFicheFrais = $pdo->getLesInfosFicheFrais($idVisiteur, $leMois);
-            $numAnnee = substr($leMois, 0, 4);
-            $numMois = substr($leMois, 4, 2);
-            $libEtat = $lesInfosFicheFrais['libEtat'];
-            $montantValide = $lesInfosFicheFrais['montantValide'];
-            $nbJustificatifs = $lesInfosFicheFrais['nbJustificatifs'];
-            $dateModif =  $lesInfosFicheFrais['dateModif'];
-            $dateModif =  dateAnglaisVersFrancais($dateModif);
+            $etat = $pdo->getEtatFicheUtilisateur($_POST["lstVisiteurs"], $mois_visiteur);
+
+            if ($etat) {
+                $date_fiche = dateAnglaisVersFrancais($etat["datefiche"]);
+
+                $numAnnee_visiteur = substr($mois_visiteur, 0, 4);
+                $numMois_visiteur = substr($mois_visiteur, 4, 2);
+
+                $lesFraisForfait = $pdo->getLesFraisForfait($_POST["lstVisiteurs"], $mois_visiteur);
+
+                $infos_visiteur = $pdo->getInfosUtilisateurByID($_POST["lstVisiteurs"]);
+            }
+            include("vues/v_validerFrais.php");
             include("vues/v_listeValiderFrais.php");
         }
-}
-
-?>
+    }

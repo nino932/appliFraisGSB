@@ -1,10 +1,9 @@
-<div>
+<?php if($etat) { ?>
+<div class="corpsform">
     <h3>Fiche de frais du mois <?php echo $numMois . "-" . $numAnnee ?> :
     </h3>
     <div class="encadre">
-        <p>
-            Etat : <?php echo $libEtat ?> depuis le <?php echo $dateModif ?> <br> Montant validé : <?php echo $montantValide ?>
-        </p>
+        <p>Etat : <?= $etat["libelle"] ?> depuis le <?= $date_fiche ?> <br> Montant validé : <?= $etat["montant"] ?></p>
         <table class="listeLegere">
             <caption>Eléments forfaitisés </caption>
             <tr>
@@ -28,6 +27,12 @@
                 ?>
             </tr>
         </table>
+        <div class="piedForm">
+            <p>
+                <input id="ok" type="submit" value="Valider" size="20" />
+                <input id="annuler" type="reset" value="Effacer" size="20" />
+            </p>
+        </div>
         <table class="listeLegere">
             <caption>Descriptif des éléments hors forfait -<?php echo $nbJustificatifs ?> justificatifs reçus -
             </caption>
@@ -53,3 +58,4 @@
         </table>
     </div>
 </div>
+<?php } ?>
