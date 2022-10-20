@@ -8895,3 +8895,9 @@ COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+--question 1--
+-- Executer la requête SQL pour réaliser une augmentation de 10% sur le montant de la table fraisforfait--
+UPDATE fraisforfait
+SET montant = 1.10 * montant;
+

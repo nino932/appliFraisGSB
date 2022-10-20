@@ -1,3 +1,5 @@
+<div id="contenu">
+<h2>Validation des fiches de frais</h2>
 <fieldset>
     <legend>Visiteurs et mois à selectionner</legend>
 <label for="lstMois" accesskey="n">Mois : </label>
@@ -22,3 +24,4 @@
            
 		   ?>
 </fieldset>
+</div>
