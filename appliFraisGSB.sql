@@ -8900,4 +8900,5 @@ COMMIT;
 -- Executer la requête SQL pour réaliser une augmentation de 10% sur le montant de la table fraisforfait--
 UPDATE fraisforfait
 SET montant = 1.10 * montant;
+--- oui---
 
